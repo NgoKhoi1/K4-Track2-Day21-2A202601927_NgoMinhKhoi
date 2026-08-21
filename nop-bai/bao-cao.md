@@ -1,16 +1,5 @@
 # Báo Cáo Lab Day 21 - CI/CD cho AI Systems
 
-<!--
-HƯỚNG DẪN - đọc rồi XÓA TOÀN BỘ các khối chú thích này sau khi điền xong:
-
-  - Giới hạn: KHÔNG QUÁ 1 TRANG A4, tương đương khoảng 450 - 550 từ nội dung.
-  - Chỉ điền vào các chỗ ___ và các ô trong bảng. Không thêm mục mới.
-  - Viết bằng câu hoàn chỉnh, không gạch đầu dòng cụt lủn.
-  - Kiểm tra độ dài sau khi đã xóa hết chú thích:
-        wc -w nop-bai/bao-cao.md
-    và xem trước bản in bằng cách mở file trên GitHub rồi Ctrl+P / Cmd+P.
--->
-
 | | |
 |---|---|
 | Họ và tên | Ngô Minh Khôi |
@@ -44,40 +33,19 @@ Tập Adult Income mất cân bằng khá rõ: chỉ 24.8% mẫu thuộc nhóm t
 
 ## 3. Khó Khăn Gặp Phải và Cách Giải Quyết
 
-<!-- Nêu 2 - 3 khó khăn thật, mỗi ô một câu ngắn. -->
-
 | Khó khăn | Nguyên nhân | Cách giải quyết |
 |---|---|---|
-| ___ | ___ | ___ |
-| ___ | ___ | ___ |
-| ___ | ___ | ___ |
+| Không SSH được vào EC2 sau khi tạo key pair | Key pair sinh dạng ed25519/PEM bị lỗi khi `ssh` load (`error in libcrypto`), không tương thích với client SSH đang dùng | Hủy key pair, tạo lại dạng RSA/PEM — tương thích rộng hơn |
+| Push code xong nhưng GitHub Actions không chạy | Repo được tạo từ fork, GitHub tự tắt Actions mặc định trên mọi fork vì lý do bảo mật | Vào tab Actions bật thủ công lần đầu, sau đó trigger lại bằng `workflow_dispatch` |
+| Lệnh `curl -X POST ... -d '...'` báo lỗi trên PowerShell | `curl` trong PowerShell là alias của `Invoke-WebRequest`, không hiểu cú pháp `-X`/`-d` như curl Unix | Gọi `curl.exe` tường minh hoặc dùng `Invoke-RestMethod -Method Post -Body ...` |
 
 ---
 
 ## 4. So Sánh Bước 2 và Bước 3 (bắt buộc, 2 - 3 câu)
 
-<!-- Lấy số liệu từ bảng ở mục 3.6 của tasks/buoc-3.md. -->
-
 | | f1_score | accuracy |
 |---|---|---|
-| Bước 2 (chỉ `train_batch1`) | ___ | ___ |
-| Bước 3 (thêm `train_batch2`) | ___ | ___ |
+| Bước 2 (chỉ `train_batch1`, 22.361 mẫu) | 0.7149 | 0.874 |
+| Bước 3 (thêm `train_batch2`, 44.722 mẫu) | 0.7354 | 0.882 |
 
-**Nhận xét:** ___
-
-<!--
-Một câu trả lời trung thực kiểu "f1 giảm 0,01 vì dữ liệu mới cùng phân phối, không mang
-thêm thông tin mới" được đánh giá cao hơn kết luận sai rằng thêm dữ liệu luôn tốt hơn.
--->
-
----
-
-## 5. Phần Bonus Đã Thực Hiện (nếu có)
-
-<!-- Xóa cả mục 5 nếu không làm bonus. Mỗi bonus tối đa 1 dòng. -->
-
-- [ ] Bonus 1 - Tracking MLflow từ xa với DagsHub: ___
-- [ ] Bonus 2 - Điều chỉnh ngưỡng quyết định: ___
-- [ ] Bonus 3 - Báo cáo precision / recall tự động: ___
-- [ ] Bonus 4 - Hoàn trả về phiên bản trước: ___
-- [ ] Bonus 5 - Cảnh báo lệch lạc dữ liệu: ___
+**Nhận xét:** f1_score tăng nhẹ (+0.02) khi gấp đôi dữ liệu huấn luyện, không phải mức cải thiện đột biến. Vì `train_batch2` được lấy mẫu ngẫu nhiên từ cùng nguồn với `train_batch1` (cùng phân phối), phần tăng này chủ yếu đến từ việc model chưa học bão hòa hết ở 22.361 mẫu đầu, chứ không nên hiểu là "càng nhiều dữ liệu càng tốt". Điều quan trọng hơn số liệu là quy trình tự động chạy đúng: chỉ một `dvc push` + `git push` đã kích hoạt lại toàn bộ pipeline train và deploy mà không cần can thiệp thủ công.
