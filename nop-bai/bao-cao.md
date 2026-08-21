@@ -27,7 +27,7 @@
 
 ## 2. Vì Sao Ngưỡng Chất Lượng Đặt Trên F1 Chứ Không Phải Accuracy
 
-Tập Adult Income mất cân bằng khá rõ: chỉ 24.8% mẫu thuộc nhóm thu nhập >50K, còn lại 75.2% là thu nhập thấp. Với tỷ lệ này, một model "lười biếng" chỉ luôn đoán "thu nhập thấp" cho mọi input vẫn đạt accuracy tới 0.752, dù nó chẳng học được gì và không bắt được một ca thu nhập cao nào (f1 = 0). Vậy nên accuracy ở bài toán này có thể rất dễ gây hiểu lầm - số cao không đồng nghĩa model tốt. F1-score của lớp dương thì đo trực tiếp việc model vừa đoán đúng (precision) vừa đoán đủ (recall) các ca thu nhập cao, nên phản ánh chất lượng thật sự chính xác hơn nhiều. Đây cũng là lý do khi tính f1_score không dùng `average="weighted"` hay `"macro"`, vì hai cách này gộp cả lớp đa số vào phép tính, kéo điểm lên cao giả tạo và làm mất hẳn ý nghĩa của ngưỡng chặn 0.65.
+Tập Adult Income mất cân bằng khá rõ: chỉ 24.8% mẫu thuộc nhóm thu nhập >50K, còn lại 75.2% là thu nhập thấp. Với tỷ lệ này, một model chỉ luôn đoán "thu nhập thấp" cho mọi input vẫn đạt accuracy tới 0.752, dù nó chẳng học được gì và không bắt được một ca thu nhập cao nào (f1 = 0). Vậy nên accuracy ở bài toán này có thể rất dễ gây hiểu lầm - số cao không đồng nghĩa model tốt. F1-score của lớp dương thì đo trực tiếp việc model vừa đoán đúng (precision) vừa đoán đủ (recall) các ca thu nhập cao, nên phản ánh chất lượng thật sự chính xác hơn nhiều. Đây cũng là lý do khi tính f1_score không dùng `average="weighted"` hay `"macro"`, vì hai cách này gộp cả lớp đa số vào phép tính, kéo điểm lên cao giả tạo và làm mất hẳn ý nghĩa của ngưỡng chặn 0.65.
 
 ---
 
